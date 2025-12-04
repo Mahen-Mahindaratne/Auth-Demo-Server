@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auth Demo Tester</title>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #2a2a2a 100%);
+            color: #e0e0e0;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            padding: 25px 35px;
+            border-radius: 2px;
+            border-left: 4px solid #c41e3a;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+            margin-bottom: 30px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .header h1 {
+            color: #ffffff;
+            font-size: 32px;
+            font-weight: 300;
+            font-family: 'Orbitron', monospace;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #b0b0b0;
+            font-size: 16px;
+            font-family: 'Orbitron', monospace;
+            letter-spacing: 1px;
+        }
+
+        .demo-banner {
+            background: linear-gradient(135deg, #c41e3a 0%, #8b0000 100%);
+            color: white;
+            padding: 15px;
+            border-radius: 2px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-family: 'Orbitron', monospace;
+            font-weight: 600;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 15px rgba(196, 30, 58, 0.3);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .endpoint {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            border-radius: 2px;
+            border-left: 4px solid #c41e3a;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+            padding: 25px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .endpoint:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.7);
+        }
+
+        .endpoint h3 {
+            color: #ffffff;
+            font-size: 20px;
+            font-family: 'Orbitron', monospace;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #c41e3a;
+            padding-bottom: 10px;
+        }
+
+        button {
+            background: linear-gradient(135deg, #c41e3a 0%, #8b0000 100%);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 2px;
+            cursor: pointer;
+            font-size: 14px;
+            font-family: 'Orbitron', monospace;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(196, 30, 58, 0.3);
+            margin: 5px;
+        }
+
+        button:hover {
+            background: linear-gradient(135deg, #8b0000 0%, #c41e3a 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(196, 30, 58, 0.5);
+        }
+
+        button.demo {
+            background: linear-gradient(135deg, #88c0d0 0%, #5e81ac 100%);
+            box-shadow: 0 4px 15px rgba(136, 192, 208, 0.3);
+        }
+
+        button.demo:hover {
+            background: linear-gradient(135deg, #5e81ac 0%, #88c0d0 100%);
+            box-shadow: 0 6px 20px rgba(136, 192, 208, 0.5);
+        }
+
+        input, select {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid #333;
+            color: #ffffff;
+            padding: 12px 15px;
+            border-radius: 2px;
+            font-size: 14px;
+            font-family: 'Rajdhani', sans-serif;
+            margin: 5px;
+            transition: all 0.3s ease;
+            border-left: 3px solid transparent;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-left: 3px solid #c41e3a;
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .result {
+            margin-top: 15px;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 2px;
+            border: 1px solid #333;
+            white-space: pre-wrap;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .success {
+            border-left: 4px solid #00ff00;
+        }
+
+        .error {
+            border-left: 4px solid #ff4444;
+        }
+
+        .demo-info {
+            border-left: 4px solid #88c0d0;
+        }
+
+        small {
+            color: #b0b0b0;
+            font-size: 12px;
+            display: block;
+            margin: 5px 0;
+        }
+
+        .demo-note {
+            color: #88c0d0;
+            font-size: 12px;
+            font-style: italic;
+            margin: 10px 0;
+        }
+
+        .user-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #c41e3a 0%, #8b0000 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            font-family: 'Orbitron', monospace;
+            box-shadow: 0 0 20px rgba(196, 30, 58, 0.4);
+            border: 2px solid #666;
+        }
+
+        /* Animated background pattern */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(196, 30, 58, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(196, 30, 58, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(196, 30, 58, 0.05) 0%, transparent 50%);
+            z-index: -1;
+            animation: backgroundShift 20s ease-in-out infinite;
+        }
+
+        @keyframes backgroundShift {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 0.8; }
+        }
+
+        .footer {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            margin-top: 50px;
+            padding: 30px;
+            border-radius: 2px;
+            border-left: 4px solid #c41e3a;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            text-align: center;
+        }
+
+        .footer p {
+            color: #888;
+            font-size: 14px;
+            font-family: 'Orbitron', monospace;
+            letter-spacing: 0.5px;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                padding: 10px;
+            }
+            
+            .header h1 {
+                font-size: 24px;
+            }
+            
+            .user-section {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔒 AUTH DEMO TESTER</h1>
+            <p>COMPREHENSIVE SECURITY FEATURES TESTING INTERFACE</p>
+        </div>
+
+        <div class="demo-banner">
+            🚀 DEMO MODE ACTIVE - Very high rate limits for testing
+        </div>
+        
+        <div class="grid">
+            <!-- Demo Controls Section -->
+            <div class="endpoint">
+                <h3>🎯 Demo Controls</h3>
+                <button class="demo" onclick="activateDemoMode()">Activate Demo Mode</button>
+                <button class="demo" onclick="resetDemoLimits()">Reset All Limits</button>
+                <button class="demo" onclick="checkDemoStatus()">Check Demo Status</button>
+                <div class="result demo-info" id="demo-result"></div>
+                <div class="demo-note">
+                    💡 Demo features: 1-minute windows, high limits, instant reset
+                </div>
+            </div>
+
+            <!-- Test Endpoint Section -->
+            <div class="endpoint">
+                <h3>🚀 Test Endpoint</h3>
+                <button onclick="testEndpoint('/test')">Test /test</button>
+                <button onclick="testEndpoint('/health')">Test /health</button>
+                <button onclick="testEndpoint('/features')">Test /features</button>
+                <div class="result" id="test-result"></div>
+            </div>
+
+            <!-- Basic Auth Section -->
+            <div class="endpoint">
+                <h3>🔑 Basic Auth</h3>
+                <button onclick="testBasicAuth()">Test Basic Auth</button>
+                <div class="result" id="basic-auth-result"></div>
+            </div>
+
+            <!-- JWT Auth Section -->
+            <div class="endpoint">
+                <h3>🎫 JWT Auth</h3>
+                <div class="user-section">
+                    <select id="jwt-user" onchange="updateUserCredentials()">
+                        <option value="demo">demo (requires key file)</option>
+                        <option value="admin">admin (requires key file)</option>
+                        <option value="user">user (no key file)</option>
+                    </select>
+                    <div class="user-avatar" id="jwt-avatar">D</div>
+                </div>
+                <input type="text" id="username" placeholder="Username" value="demo">
+                <input type="password" id="password" placeholder="Password" value="DemoPass123!">
+                <br>
+                <input type="file" id="keyFile" accept=".txt,.key">
+                <small>For demo: demo-key.txt with "demo-key-content"</small>
+                <br>
+                <button onclick="getJWT()">Get JWT Token</button>
+                <button onclick="testJWT()">Test JWT Protected</button>
+                <div class="result" id="jwt-result"></div>
+                <div class="demo-note">
+                    🔄 Only failed attempts count toward limits
+                </div>
+            </div>
+
+            <!-- Web Login Section -->
+            <div class="endpoint">
+                <h3>🌐 Web Login</h3>
+                <div class="user-section">
+                    <select id="web-user" onchange="updateWebCredentials()">
+                        <option value="demo">demo (requires key file)</option>
+                        <option value="admin">admin (requires key file)</option>
+                        <option value="user">user (no key file)</option>
+                    </select>
+                    <div class="user-avatar" id="web-avatar">D</div>
+                </div>
+                <input type="password" id="web-password" placeholder="Password" value="DemoPass123!">
+                <input type="file" id="web-keyFile" accept=".txt,.key">
+                <small>For demo: demo-key.txt with "demo-key-content"</small>
+                <br>
+                <button onclick="testWebLogin()">Test Web Login</button>
+                <button onclick="testProfile()">Test Profile</button>
+                <button onclick="logout()">Logout</button>
+                <div class="result" id="web-login-result"></div>
+            </div>
+
+            <!-- CSRF Section -->
+            <div class="endpoint">
+                <h3>🛡️ CSRF</h3>
+                <button onclick="getCSRFToken()">Get CSRF Token</button>
+                <div class="result" id="csrf-result"></div>
+            </div>
+
+            <!-- Rate Limit Section -->
+            <div class="endpoint">
+                <h3>⏱️ Rate Limits</h3>
+                <button onclick="checkRateLimitInfo()">Check Rate Limits</button>
+                <button onclick="resetRateLimits()">Reset Rate Limits</button>
+                <div class="result" id="rate-limit-result"></div>
+                <div class="demo-note">
+                    ⏰ 1-minute windows • 🚀 High limits • 🔄 Auto-reset
+                </div>
+            </div>
+        </div>
+
+        <footer class="footer">
+            <p>&copy; 2025 Mahen Mahindaratne</p>
+        </footer>
+    </div>
+
+    <script>
+        let jwtToken = '';
+        let csrfToken = '';
+
+        // User credentials mapping
+        const userCredentials = {
+            'demo': { username: 'demo', password: 'DemoPass123!' },
+            'admin': { username: 'admin', password: 'AdminPass456!' },
+            'user': { username: 'user', password: 'UserPass789!' }
+        };
+
+        const keyFileContents = {
+            'demo': 'demo-key-content',
+            'admin': 'admin-key-content'
+        };
+
+        function updateUserCredentials() {
+            const selectedUser = document.getElementById('jwt-user').value;
+            const creds = userCredentials[selectedUser];
+            document.getElementById('username').value = creds.username;
+            document.getElementById('password').value = creds.password;
+            document.getElementById('jwt-avatar').textContent = creds.username.charAt(0).toUpperCase();
+        }
+
+        function updateWebCredentials() {
+            const selectedUser = document.getElementById('web-user').value;
+            const creds = userCredentials[selectedUser];
+            document.getElementById('web-password').value = creds.password;
+            document.getElementById('web-avatar').textContent = creds.username.charAt(0).toUpperCase();
+        }
+
+        // Demo Control Functions
+        async function activateDemoMode() {
+            try {
+                const response = await fetch('/api/demo/reset-limits', {
+                    method: 'POST'
+                });
+                const data = await response.json();
+                document.getElementById('demo-result').textContent = JSON.stringify(data, null, 2);
+                document.getElementById('demo-result').className = 'result demo-info';
+            } catch (error) {
+                document.getElementById('demo-result').textContent = 'Error: ' + error.message;
+                document.getElementById('demo-result').className = 'result error';
+            }
+        }
+
+        async function resetDemoLimits() {
+            await activateDemoMode(); // Same function for now
+        }
+
+        async function checkDemoStatus() {
+            try {
+                const response = await fetch('/api/demo/status');
+                const data = await response.json();
+                document.getElementById('demo-result').textContent = JSON.stringify(data, null, 2);
+                document.getElementById('demo-result').className = 'result demo-info';
+            } catch (error) {
+                document.getElementById('demo-result').textContent = 'Error: ' + error.message;
+                document.getElementById('demo-result').className = 'result error';
+            }
+        }
+
+        async function checkRateLimitInfo() {
+            try {
+                const response = await fetch('/api/rate-limit-info');
+                const data = await response.json();
+                document.getElementById('rate-limit-result').textContent = JSON.stringify(data, null, 2);
+                document.getElementById('rate-limit-result').className = 'result demo-info';
+            } catch (error) {
+                document.getElementById('rate-limit-result').textContent = 'Error: ' + error.message;
+                document.getElementById('rate-limit-result').className = 'result error';
+            }
+        }
+
+        async function resetRateLimits() {
+            try {
+                const response = await fetch('/admin/reset-rate-limits', {
+                    method: 'POST'
+                });
+                const data = await response.json();
+                document.getElementById('rate-limit-result').textContent = JSON.stringify(data, null, 2);
+                document.getElementById('rate-limit-result').className = 'result demo-info';
+            } catch (error) {
+                document.getElementById('rate-limit-result').textContent = 'Error: ' + error.message;
+                document.getElementById('rate-limit-result').className = 'result error';
+            }
+        }
+
+        // Existing functions remain the same...
+        async function testEndpoint(path) {
+            try {
+                const response = await fetch(path);
+                const data = await response.json();
+                document.getElementById('test-result').textContent = JSON.stringify(data, null, 2);
+                document.getElementById('test-result').className = 'result success';
+            } catch (error) {
+                document.getElementById('test-result').textContent = 'Error: ' + error.message;
+                document.getElementById('test-result').className = 'result error';
+            }
+        }
+
+        async function testBasicAuth() {
+            try {
+                const response = await fetch('/api/basic-auth-demo', {
+                    headers: {
+                        'Authorization': 'Basic ' + btoa('admin:AdminPass456!')
+                    }
+                });
+                const data = await response.json();
+                document.getElementById('basic-auth-result').textContent = JSON.stringify(data, null, 2);
+                document.getElementById('basic-auth-result').className = 'result success';
+            } catch (error) {
+                document.getElementById('basic-auth-result').textContent = 'Error: ' + error.message;
+                document.getElementById('basic-auth-result').className = 'result error';
+            }
+        }
+
+        async function getJWT() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const keyFile = document.getElementById('keyFile').files[0];
+            
+            const formData = new FormData();
+            formData.append('username', username);
+            formData.append('password', password);
+            if (keyFile) {
+                formData.append('keyFile', keyFile);
+            }
+            
+            try {
+                const response = await fetch('/api/jwt-login', {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await response.json();
+                if (data.token) {
+                    jwtToken = data.token;
+                    data.message += ' - Token saved!';
+                    document.getElementById('jwt-result').className = 'result success';
+                } else {
+                    document.getElementById('jwt-result').className = 'result error';
+                }
+                document.getElementById('jwt-result').textContent = JSON.stringify(data, null, 2);
+            } catch (error) {
+                document.getElementById('jwt-result').textContent = 'Error: ' + error.message;
+                document.getElementById('jwt-result').className = 'result error';
+            }
+        }
+
+        async function testJWT() {
+            if (!jwtToken) {
+                document.getElementById('jwt-result').textContent = 'Please get JWT token first';
+                document.getElementById('jwt-result').className = 'result error';
+                return;
+            }
+            
+            try {
+                const response = await fetch('/api/jwt-protected', {
+                    headers: {
+                        'Authorization': 'Bearer ' + jwtToken
+                    }
+                });
+                const data = await response.json();
+                document.getElementById('jwt-result').textContent = JSON.stringify(data, null, 2);
+                document.getElementById('jwt-result').className = 'result success';
+            } catch (error) {
+                document.getElementById('jwt-result').textContent = 'Error: ' + error.message;
+                document.getElementById('jwt-result').className = 'result error';
+            }
+        }
+
+        async function testWebLogin() {
+            const selectedUser = document.getElementById('web-user').value;
+            const password = document.getElementById('web-password').value;
+            const keyFile = document.getElementById('web-keyFile').files[0];
+            
+            // First get CSRF token
+            const csrfResponse = await fetch('/api/csrf-token');
+            const csrfData = await csrfResponse.json();
+            csrfToken = csrfData.csrfToken;
+
+            const formData = new FormData();
+            formData.append('username', selectedUser);
+            formData.append('password', password);
+            formData.append('_csrf', csrfToken);
+            if (keyFile) {
+                formData.append('keyFile', keyFile);
+            }
+
+            try {
+                const response = await fetch('/login', {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-Token': csrfToken
+                    },
+                    body: formData
+                });
+                const data = await response.json();
+                document.getElementById('web-login-result').textContent = JSON.stringify(data, null, 2);
+                if (data.success) {
+                    document.getElementById('web-login-result').className = 'result success';
+                } else {
+                    document.getElementById('web-login-result').className = 'result error';
+                }
+            } catch (error) {
+                document.getElementById('web-login-result').textContent = 'Error: ' + error.message;
+                document.getElementById('web-login-result').className = 'result error';
+            }
+        }
+
+        async function testProfile() {
+            try {
+                const response = await fetch('/profile');
+                const data = await response.json();
+                document.getElementById('web-login-result').textContent = JSON.stringify(data, null, 2);
+                if (data.success) {
+                    document.getElementById('web-login-result').className = 'result success';
+                } else {
+                    document.getElementById('web-login-result').className = 'result error';
+                }
+            } catch (error) {
+                document.getElementById('web-login-result').textContent = 'Error: ' + error.message;
+                document.getElementById('web-login-result').className = 'result error';
+            }
+        }
+
+        async function logout() {
+            try {
+                const response = await fetch('/logout');
+                const data = await response.json();
+                document.getElementById('web-login-result').textContent = JSON.stringify(data, null, 2);
+                document.getElementById('web-login-result').className = 'result success';
+            } catch (error) {
+                document.getElementById('web-login-result').textContent = 'Error: ' + error.message;
+                document.getElementById('web-login-result').className = 'result error';
+            }
+        }
+
+        async function getCSRFToken() {
+            try {
+                const response = await fetch('/api/csrf-token');
+                const data = await response.json();
+                csrfToken = data.csrfToken;
+                document.getElementById('csrf-result').textContent = JSON.stringify(data, null, 2);
+                document.getElementById('csrf-result').className = 'result success';
+            } catch (error) {
+                document.getElementById('csrf-result').textContent = 'Error: ' + error.message;
+                document.getElementById('csrf-result').className = 'result error';
+            }
+        }
+
+        // Initialize
+        updateUserCredentials();
+        updateWebCredentials();
+        
+        // Auto-check demo status on load
+        window.addEventListener('load', function() {
+            checkDemoStatus();
+        });
+    </script>
+</body>
+</html>
